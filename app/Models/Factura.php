@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Factura extends Model
+{
+    protected $table = 'facturas';
+
+    protected $fillable = [
+        'id_orden',
+        'id_users',
+        'tipo_factura',
+        'fecha_emision',
+        'total',
+    ];
+
+    public function orden()
+    {
+        return $this->belongsTo(Orden::class, 'id_orden');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_users');
+    }
+
+    public function detalles()
+    {
+        return $this->hasMany(DetallesFactura::class, 'id_factura');
+    }
+}
