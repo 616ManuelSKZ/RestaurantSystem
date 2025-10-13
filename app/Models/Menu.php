@@ -15,7 +15,6 @@ class Menu extends Model
         'disponible',
         'id_categoria',
         'imagen',
-        'fecha_registro',
     ];
 
     public function categoria()

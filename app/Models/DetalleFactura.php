@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DetallesFactura extends Model
+class DetalleFactura extends Model
 {
     protected $table = 'detalles_factura';
 
@@ -13,6 +13,8 @@ class DetallesFactura extends Model
         'id_menu',
         'cantidad',
         'precio_unitario',
+        'nombre_menu',
+        'precio_menu',
     ];
 
     public function factura()

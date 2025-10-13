@@ -1,32 +1,23 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Crear Categoría') }}
-        </h2>
-    </x-slot>
+<form action="{{ route('categorias.store') }}" method="POST">
+    @csrf
 
-    <div class="py-12">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <form action="{{ route('categorias.store') }}" method="POST">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label for="nombre" class="block font-medium text-sm text-gray-700">Nombre de Categoría</label>
-                        <input type="text" name="nombre" id="nombre" required
-                            class="form-input rounded-md shadow-sm mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            value="{{ old('nombre') }}">
-                        @error('nombre')
-                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="flex justify-end">
-                        <a href="{{ route('menus.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">Cancelar</a>
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    {{-- Nombre de Categoría --}}
+    <div class="mb-6">
+        <x-input-label for="nombre" :value="__('Nombre de Categoría')" class="text-gray-900 dark:text-gray-400" />
+        <x-text-input id="nombre" name="nombre" type="text" required value="{{ old('nombre') }}"
+            class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" />
+        <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
     </div>
-</x-app-layout>
+
+    {{-- Botones --}}
+    <div class="flex justify-end gap-4 mt-6">
+        <button type="button" @click="modalVisible = false"
+            class="px-6 py-2 rounded-lg text-sm font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200">
+            Cancelar
+        </button>
+        <button type="submit" class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90">
+            Guardar
+        </button>
+    </div>
+
+</form>

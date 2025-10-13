@@ -60,7 +60,6 @@ class MenuController extends Controller
             'disponible' => 'required|boolean',
             'id_categoria' => 'required|exists:categorias,id',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'fecha_registro' => 'required|date',
         ]);
 
         $rutaImagen = null;
@@ -75,7 +74,6 @@ class MenuController extends Controller
             'disponible' => $request->disponible,
             'id_categoria' => $request->id_categoria,
             'imagen' => $rutaImagen,
-            'fecha_registro' => $request->fecha_registro,
         ]);
 
         return redirect()->route('menus.index')->with('success', 'Menú creado exitosamente.');
@@ -108,7 +106,6 @@ class MenuController extends Controller
             'disponible' => 'required|boolean',
             'id_categoria' => 'required|exists:categorias,id',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'fecha_registro' => 'required|date',
         ]);
         $menu = Menu::findOrFail($id);
 
@@ -131,7 +128,6 @@ class MenuController extends Controller
             'disponible' => $request->disponible,
             'id_categoria' => $request->id_categoria,
             'imagen' => $menu->imagen,
-            'fecha_registro' => $request->fecha_registro,
         ]);
         return redirect()->route('menus.index')->with('success', 'Menú actualizado exitosamente.');
     }

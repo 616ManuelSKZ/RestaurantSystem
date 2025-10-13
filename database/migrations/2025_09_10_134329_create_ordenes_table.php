@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ordenes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_mesa')->constrained('mesas')->onDelete('cascade');
+            $table->foreignId('id_mesas')->nullable()->constrained('mesas')->onDelete('set null');
             $table->foreignId('id_users')->constrained('users')->onDelete('cascade');
             $table->string('estado');
             $table->dateTime('fecha_orden');

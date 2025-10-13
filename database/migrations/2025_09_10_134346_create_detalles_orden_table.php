@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('detalles_orden', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_orden')->constrained('ordenes')->onDelete('cascade');
-            $table->foreignId('id_menu')->constrained('menus')->onDelete('cascade');
+            $table->foreignId('id_menu')->nullable()->constrained('menus')->onDelete('set null');
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 8, 2);
+            $table->decimal('subtotal', 10, 2);
+            $table->text('nombre_menu');
+            $table->decimal('precio_menu', 8, 2);
             $table->timestamps();
         });
     }

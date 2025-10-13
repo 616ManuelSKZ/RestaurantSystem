@@ -14,34 +14,50 @@
                             Crear Categoría
                         </a>
                     </div>
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nombre</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($categorias as $categoria)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $categoria->id }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $categoria->nombre }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('categorias.edit', $categoria) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Editar</a>
-                                    <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta categoría?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Eliminar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200" style="table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b text-center" style="width: 15%;">ID</th>
+                                    <th class="py-2 px-4 border-b text-left" style="width: 55%;">Nombre</th>
+                                    <th class="py-2 px-4 border-b text-center" style="width: 30%;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($categorias as $categoria)
+                                    <tr>
+                                        <td class="py-2 px-4 border-b text-center align-middle">{{ $categoria->id }}</td>
+                                        <td class="py-2 px-4 border-b align-middle">{{ $categoria->nombre }}</td>
+                                        <td class="py-2 px-4 border-b text-center align-middle">
+                                            <!-- Editar -->
+                                            <a href="{{ route('categorias.edit', $categoria) }}" class=" inline-block">
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/cbtlerlm.json"
+                                                    trigger="hover"
+                                                    colors="primary:#fbbf24"
+                                                    style="width:40px;height:40px">
+                                                </lord-icon>
+                                            </a>
+
+                                            <!-- Eliminar -->
+                                            <form action="{{ route('categorias.destroy', $categoria) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta categoría?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" style="all: unset; cursor: pointer;">
+                                                    <lord-icon
+                                                        src="https://cdn.lordicon.com/egqwwrlq.json"
+                                                        trigger="hover"
+                                                        colors="primary:#646e78,secondary:#c71f16"
+                                                        style="width:40px;height:40px">
+                                                    </lord-icon>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

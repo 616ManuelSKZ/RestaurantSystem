@@ -91,6 +91,6 @@ class CategoriaController extends Controller
     {
         $categoria = Categoria::findOrFail($id);
         $categoria->delete();
-        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente.');
+        return redirect()->route('menus.index')->with('success', 'Categoría eliminada exitosamente.');
     }
 }

@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('detalles_factura', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_factura')->constrained('facturas')->onDelete('cascade');
-            $table->foreignId('id_menu')->constrained('menus')->onDelete('cascade');
+            $table->foreignId('id_menu')->nullable()->constrained('menus')->onDelete('set null');
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 10, 2);
+            $table->text('nombre_menu');
+            $table->decimal('precio_menu', 10, 2);
             $table->timestamps();
         });
     }

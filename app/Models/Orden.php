@@ -9,7 +9,7 @@ class Orden extends Model
     protected $table = 'ordenes';
 
     protected $fillable = [
-        'id_mesa',
+        'id_mesas',
         'id_users',
         'estado',
         'fecha_orden',
@@ -17,7 +17,7 @@ class Orden extends Model
 
     public function mesa()
     {
-        return $this->belongsTo(Mesa::class, 'id_mesa');
+        return $this->belongsTo(Mesa::class, 'id_mesas');
     }
 
     public function user()
@@ -25,8 +25,13 @@ class Orden extends Model
         return $this->belongsTo(User::class, 'id_users');
     }
 
-    public function detalles()
+    public function detalles_orden()
     {
-        return $this->hasMany(DetallesOrden::class, 'id_orden');
+        return $this->hasMany(DetalleOrden::class, 'id_orden');
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->detalles_orden->sum('subtotal');
     }
 }

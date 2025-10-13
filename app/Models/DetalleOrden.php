@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DetallesOrden extends Model
+class DetalleOrden extends Model
 {
     protected $table = 'detalles_orden';
 
@@ -13,10 +13,18 @@ class DetallesOrden extends Model
         'id_menu',
         'cantidad',
         'precio_unitario',
+        'subtotal',
+        'nombre_menu',
+        'precio_menu',
     ];
 
     public function orden()
     {
         return $this->belongsTo(Orden::class, 'id_orden');
+    }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class, 'id_menu');
     }
 }
