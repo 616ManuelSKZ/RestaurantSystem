@@ -16,7 +16,11 @@ class OrdenController extends Controller
 {
     public function index()
     {
-        $ordenes = Orden::with('mesa.area', 'user', 'detalles_orden.menu')->get();
+        // Cargamos relaciones, ordenamos por la última orden agregada y paginamos
+        $ordenes = Orden::with('mesa.area', 'user', 'detalles_orden.menu')
+            ->orderBy('fecha_orden', 'desc') // Últimas primero
+            ->paginate(15); // Límite de 15 por página
+
         return view('ordenes.index', compact('ordenes'));
     }
 
@@ -54,15 +58,30 @@ class OrdenController extends Controller
             'platillos.*.cantidad' => 'required|integer|min:1',
         ]);
 
-        // 1. Crear la orden
+        // 1. Calcular el subtotal a partir de los platillos seleccionados
+        $subtotal = 0;
+
+        foreach ($request->platillos as $platillo) {
+            $menu = Menu::find($platillo['id_menu']);
+            $subtotal += $menu->precio * $platillo['cantidad'];
+        }
+
+        // 2. Calcular el impuesto (13%) y el total con IVA
+        $impuestos = $subtotal * 0.13;
+        $totaliva = $subtotal + $impuestos;
+
+        // 3. Crear la orden con los totales
         $orden = Orden::create([
             'id_mesas' => $request->id_mesas,
             'id_users' => Auth::id(),
             'estado' => 'En Preparación',
             'fecha_orden' => now(),
+            'subtotal' => $subtotal,
+            'impuestos' => $impuestos,
+            'totaliva' => $totaliva,
         ]);
 
-        // 2. Insertar los platillos en detalles_orden
+        // 4. Insertar los platillos en detalles_orden
         foreach ($request->platillos as $platillo) {
             $menu = Menu::find($platillo['id_menu']);
 
@@ -77,13 +96,13 @@ class OrdenController extends Controller
             ]);
         }
 
-        // 3. Cambiar mesa a ocupada
+        // 5. Cambiar el estado de la mesa a "ocupada"
         $mesa = Mesa::find($request->id_mesas);
         $mesa->estado = 'ocupada';
         $mesa->save();
 
         return redirect()->route('ordenes.index', $orden->id)
-                         ->with('success', 'Orden creada con éxito.');
+                        ->with('success', 'Orden creada con éxito.');
     }
 
     public function edit($id)
@@ -98,24 +117,55 @@ class OrdenController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'id_mesas' => 'required|exists:mesas,id',
+            'platillos' => 'required|array|min:1',
+            'platillos.*.id_menu' => 'required|exists:menus,id',
+            'platillos.*.cantidad' => 'required|integer|min:1',
+        ]);
+
         $orden = Orden::findOrFail($id);
+
+        // 1️⃣ Recalcular los valores de la orden
         $orden->id_mesas = $request->id_mesas;
+
+        $subtotal = 0;
+        foreach ($request->platillos as $platillo) {
+            $menu = Menu::find($platillo['id_menu']);
+            $subtotal += $menu->precio * $platillo['cantidad'];
+        }
+
+        $impuestos = $subtotal * 0.13;
+        $totaliva = $subtotal + $impuestos;
+
+        // 2️⃣ Actualizar datos y devolver al estado "En Preparación"
+        $orden->subtotal = $subtotal;
+        $orden->impuestos = $impuestos;
+        $orden->totaliva = $totaliva;
+        $orden->estado = 'En Preparación'; // 👈 Aquí está el cambio
         $orden->save();
 
-        // Actualizar los detalles
+        // 3️⃣ Actualizar los platillos (borrar y volver a insertar)
         $orden->detalles_orden()->delete();
         foreach ($request->platillos as $platillo) {
+            $menu = Menu::find($platillo['id_menu']);
             $orden->detalles_orden()->create([
-                'id_menu' => $platillo['id_menu'],
+                'id_menu' => $menu->id,
                 'cantidad' => $platillo['cantidad'],
-                'precio_unitario' => Menu::find($platillo['id_menu'])->precio,
-                'subtotal' => Menu::find($platillo['id_menu'])->precio * $platillo['cantidad'],
-                'nombre_menu' => Menu::find($platillo['id_menu'])->nombre,
-                'precio_menu' => Menu::find($platillo['id_menu'])->precio,
+                'precio_unitario' => $menu->precio,
+                'subtotal' => $menu->precio * $platillo['cantidad'],
+                'nombre_menu' => $menu->nombre,
+                'precio_menu' => $menu->precio,
             ]);
         }
 
-        return redirect()->route('ordenes.index')->with('success', 'Orden actualizada correctamente.');
+        // 4️⃣ Si la mesa cambia, actualizar su estado también
+        $mesa = Mesa::find($request->id_mesas);
+        $mesa->estado = 'ocupada';
+        $mesa->save();
+
+        return redirect()->route('ordenes.index')
+            ->with('success', 'Orden actualizada correctamente y vuelta a preparación.');
     }
 
     public function agregarPlatillos(Request $request, $idOrden)

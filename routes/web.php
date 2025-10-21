@@ -38,9 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('detalles_facturas', DetalleFacturaController::class)->middleware('auth');
     Route::resource('detalles_ordenes', DetalleOrdenController::class)->middleware('auth');
     Route::resource('facturas', FacturaController::class)->middleware('auth');
+    Route::get('/menus/buscar', [MenuController::class, 'buscar'])->name('menus.buscar');
     Route::resource('menus', MenuController::class)->middleware('auth');
     Route::resource('area_mesas', AreaMesaController::class)->middleware('auth');
-    Route::get('/areas/{area}/mesas-disponibles', [App\Http\Controllers\MesaController::class, 'mesasDisponibles']);
+    Route::get('/areas/{area}/mesas-disponibles', [MesaController::class, 'mesasDisponibles']);
     Route::resource('mesas', MesaController::class)->middleware('auth');
     Route::resource('ordenes', OrdenController::class)->middleware('auth');
     // Ruta para agregar más platillos
@@ -58,7 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/facturas/{factura}/xml', [FacturaController::class, 'exportXML'])->name('facturas.exportXML');
     Route::get('/facturas/crear/{idOrden}', [FacturaController::class, 'create'])->name('facturas.create');
     Route::post('/facturas', [FacturaController::class, 'store'])->name('facturas.store');
-
+    Route::get('/facturas/pdf/resumen', [FacturaController::class, 'exportPDFResumen'])->name('facturas.pdf.resumen');
+    
 
     Route::resource('users', UserController::class)->middleware('auth');
 

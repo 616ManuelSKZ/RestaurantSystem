@@ -17,6 +17,15 @@ return new class extends Migration
             $table->foreignId('id_users')->constrained('users')->onDelete('cascade');
             $table->string('tipo_factura');
             $table->dateTime('fecha_emision');
+
+            $table->string('nombre_cliente')->nullable();
+            $table->string('telefono_cliente')->nullable();
+            $table->string('nit_cliente')->nullable();
+            $table->string('direccion_cliente')->nullable();
+
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('impuestos', 10, 2)->default(0);
+            $table->decimal('totaliva', 10, 2)->default(0);
             $table->decimal('total', 10, 2);
             $table->timestamps();
         });

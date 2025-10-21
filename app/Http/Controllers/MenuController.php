@@ -143,4 +143,23 @@ class MenuController extends Controller
         $menu->delete();
         return redirect()->route('menus.index')->with('success', 'Menú eliminado exitosamente.');
     }
+
+    public function buscar(Request $request)
+    {
+        $query = $request->get('q', '');
+
+        // Si no hay búsqueda, retorna vacío
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        // Buscar por nombre de platillo (LIKE)
+        $menus = \App\Models\Menu::where('nombre', 'like', "%{$query}%")
+            ->where('disponible', true)
+            ->with('categoria') // Incluye la categoría si la necesitas
+            ->take(10) // límite de resultados
+            ->get(['id', 'nombre', 'precio', 'imagen', 'id_categoria', 'disponible']);
+
+        return response()->json($menus);
+    }
 }

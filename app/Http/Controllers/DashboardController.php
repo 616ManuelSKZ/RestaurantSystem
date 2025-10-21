@@ -20,11 +20,14 @@ class DashboardController extends Controller
         $totalUsuarios = User::count();
         $totalPedidos  = Orden::count();
 
-        // Total ventas usando la tabla facturas
         $totalVentas   = Factura::sum('total');
 
-        // Si quieres también las ventas por mes para la gráfica
-        $ventasPorMes = Factura::select(
+        $ventasPorDia = Factura::whereDate('fecha_emision', now())->sum('total');
+        $ventasPorSemana = Factura::whereBetween('fecha_emision', [now()->startOfWeek(), now()->endOfWeek()])->sum('total');
+        $ventasPorMes = Factura::whereMonth('fecha_emision', now()->month)->sum('total');
+        $ventasPorAnio = Factura::whereYear('fecha_emision', now()->year)->sum('total');
+
+        $ventasPorMesChart = Factura::select(
                 DB::raw('MONTH(fecha_emision) as mes'),
                 DB::raw('SUM(total) as total')
             )
@@ -40,10 +43,16 @@ class DashboardController extends Controller
             'totalSalas',
             'totalUsuarios',
             'totalPedidos',
-            'totalVentas',
-            'ventasPorMes',
+            'totalVentas', 
+            'ventasPorDia', 
+            'ventasPorSemana', 
+            'ventasPorMes', 
+            'ventasPorAnio', 
+            'ventasPorMesChart',
             'ordenes',
             'mesas'
         ));
     }
+    
+
 }

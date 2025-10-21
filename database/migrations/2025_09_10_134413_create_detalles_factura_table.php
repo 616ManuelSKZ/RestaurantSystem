@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('id_menu')->nullable()->constrained('menus')->onDelete('set null');
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 10, 2);
+            $table->decimal('subtotal', 10, 2)->default(0);
             $table->text('nombre_menu');
             $table->decimal('precio_menu', 10, 2);
             $table->timestamps();

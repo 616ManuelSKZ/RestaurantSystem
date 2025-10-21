@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class DetallesFacturaController extends Controller
+class DetalleFacturaController extends Controller
 {
     //
 }

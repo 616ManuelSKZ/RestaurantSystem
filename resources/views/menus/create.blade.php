@@ -13,7 +13,7 @@
                 <form method="POST" action="{{ route('menus.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- 🔹 Imagen --}}
+                    {{-- Imagen --}}
                     <div class="mb-6">
                         <label for="imagen" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Subir imagen</label>
                         <div class="flex flex-col md:flex-row items-start gap-6">
@@ -30,14 +30,14 @@
                         </div>
                     </div>
 
-                    {{-- 🔹 Nombre --}}
+                    {{-- Nombre --}}
                     <div class="mb-6">
                         <x-input-label for="nombre" :value="__('Nombre')" class="text-gray-900 dark:text-gray-400" />
                         <x-text-input id="nombre" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="nombre" />
                         <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                     </div>
 
-                    {{-- 🔹 Descripción --}}
+                    {{-- Descripción --}}
                     <div class="mb-6">
                         <x-input-label for="descripcion" :value="__('Descripción')" class="text-gray-900 dark:text-gray-400" />
                         <textarea id="descripcion" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" name="descripcion" required>{{ old('descripcion') }}</textarea>
@@ -83,7 +83,7 @@
 
     </main>
 
-    {{-- 📸 Vista previa de imagen --}}
+    {{-- Vista previa de imagen --}}
     <script>
         function previewImagen(event) {
             const input = event.target;

@@ -101,7 +101,7 @@
                         </a>
                         <button type="submit" 
                             class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90">
-                            Guardar Menú
+                            Actualizar Menú
                         </button>
                     </div>
 

@@ -57,14 +57,18 @@
                         <tr class="hover:bg-muted-light dark:hover:bg-muted-dark transition-colors duration-200">
                             <td class="px-4 py-3 flex items-center gap-3 text-text-light dark:text-text-dark">
                                 @if($detalle->menu)
-                                    <img src="{{ asset('storage/'.$detalle->menu->imagen) }}"
+                                    <img 
+                                        src="{{ $detalle->menu->imagen ? asset('storage/'.$detalle->menu->imagen) : asset('images/default-platillo.jpg') }}"
                                         alt="{{ $detalle->menu->nombre }}"
-                                        class="w-12 h-12 rounded-lg object-cover shadow-sm">
+                                        class="w-12 h-12 rounded-lg object-cover shadow-sm"
+                                    >
                                     {{ $detalle->menu->nombre }}
                                 @else
-                                    <img src="{{ asset('images/no-image.png') }}"
+                                    <img 
+                                        src="{{ asset('images/default-platillo.jpg') }}"
                                         alt="Sin imagen"
-                                        class="w-12 h-12 rounded-lg object-cover shadow-sm opacity-60">
+                                        class="w-12 h-12 rounded-lg object-cover shadow-sm opacity-60"
+                                    >
                                     <span class="italic text-gray-400">{{ $detalle->nombre_menu }}</span>
                                 @endif
                             </td>
@@ -109,6 +113,13 @@
                     </button>
                 </form>
             @elseif($orden->estado === 'Lista')
+                <form action="{{ route('ordenes.cancelar', $orden->id) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow">
+                        Cancelar Orden
+                    </button>
+                </form>
                 <form action="{{ route('ordenes.actualizarEstado', $orden->id) }}" method="POST">
                     @csrf
                     @method('PUT')

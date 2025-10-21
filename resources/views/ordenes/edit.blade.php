@@ -7,24 +7,30 @@
 
     <div class="flex h-screen overflow-hidden">
         {{-- Aside: Menú de platillos --}}
-        <aside class="w-80 bg-background-light dark:bg-background-dark border-r border-primary/20 dark:border-primary/30 p-4 overflow-y-auto">
+        <aside class="w-80 bg-background-light dark:bg-background-dark border-r border-primary/20 dark:border-primary/30 p-4 flex flex-col">
 
             {{-- Buscador --}}
-            <div class="mb-4 relative">
-                <input type="text" placeholder="Buscar platillo..."
+            <div class="mb-4 relative flex-shrink-0">
+                <input type="text" id="buscar-platillo" placeholder="Buscar platillo..."
                     class="w-full pl-10 pr-4 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-gray-800 dark:text-gray-200 placeholder-primary/70 dark:placeholder-primary/60 border-none focus:ring-2 focus:ring-primary">
-                <span class="absolute left-3 top-2.5 text-primary">🔍</span>
+                <span class="absolute left-3 top-2.5 text-primary">
+                    🔍
+                </span>
+            </div>
+            <div id="resultados-busqueda" class="mb-4 hidden">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Resultados de búsqueda</h3>
+                <div id="lista-resultados" class="grid grid-cols-2 gap-4"></div>
             </div>
 
             {{-- Pestañas de categorías --}}
-            <div class="mb-4">
-                <ul class="flex space-x-2 text-sm font-medium">
+            <div class="mb-4 flex-shrink-0 overflow-x-auto scrollbar-thin scrollbar-thumb-primary/50 scrollbar-track-transparent">
+                <ul class="flex space-x-2 text-sm font-medium min-w-max">
                     @foreach($categorias as $index => $categoria)
                         <li>
                             <button type="button" 
                                 onclick="openTab({{ $index }})"
                                 id="tab-btn-{{ $index }}"
-                                class="px-3 py-1 rounded-lg border-b-2 border-transparent hover:border-primary focus:outline-none">
+                                class="px-3 py-1 rounded-lg border-b-2 border-transparent hover:border-primary focus:outline-none whitespace-nowrap">
                                 {{ $categoria->nombre }}
                             </button>
                         </li>
@@ -32,24 +38,26 @@
                 </ul>
             </div>
 
-            {{-- Contenedor de platillos por categoría --}}
-            @foreach($categorias as $index => $categoria)
-                <div id="tab-content-{{ $index }}" class="{{ $index != 0 ? 'hidden' : '' }}">
-                    <div class="grid grid-cols-2 gap-4">
-                        @foreach($categoria->menus as $menu)
-                            <div class="group cursor-pointer" onclick="addPlatillo({{ $menu->id }}, '{{ $menu->nombre }}', {{ $menu->precio }})">
-                                <div class="aspect-square w-full rounded-lg bg-cover bg-center"
-                                    style="background-image: url('{{ $menu->imagen ? asset('storage/'.$menu->imagen) : 'https://via.placeholder.com/150' }}')">
-                                </div>
-
-                                <p class="mt-2 text-sm font-medium text-center text-gray-800 dark:text-gray-200 group-hover:text-primary">
-                                    {{ $menu->nombre }}<br>${{ number_format($menu->precio, 2) }}
-                                </p>
-                            </div>
-                        @endforeach
+            {{-- Contenedor con scroll solo para las categorías --}}
+            <div class="grid grid-cols-2 gap-4">
+                @foreach($categoria->menus as $menu)
+                    <div 
+                        class="group cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow p-2 hover:ring-2 hover:ring-primary transition"
+                        style="display: flex; flex-direction: column; align-items: center;"
+                        onclick="addPlatillo({{ $menu->id }}, '{{ $menu->nombre }}', {{ $menu->precio }})"
+                    >
+                        <div 
+                            class="aspect-square w-full rounded-lg bg-cover bg-center"
+                            style="background-image: url('{{ $menu->imagen ? asset('storage/'.$menu->imagen) : '/images/default-platillo.jpg' }}');"
+                        ></div>
+                        
+                        <p class="mt-2 text-sm font-medium text-center text-gray-800 dark:text-gray-200 group-hover:text-primary">
+                            {{ $menu->nombre }}<br>
+                            ${{ number_format($menu->precio, 2) }}
+                        </p>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </aside>
 
         {{-- Main: Formulario de orden --}}
@@ -66,7 +74,7 @@
                     <div class="flex-1">
                         <label for="id_area_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Área de mesas</label>
                         <select name="id_area_mesas" id="id_area_mesas"
-                            class="w-full border-gray-300 rounded-md bg-white text-black dark:bg-white dark:text-black" required>
+                            class="w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" required>
                             <option value="">-- Selecciona un área --</option>
                             @foreach($areas as $area)
                                 <option value="{{ $area->id }}"
@@ -80,7 +88,7 @@
                     <div class="flex-1">
                         <label for="id_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Mesa disponible</label>
                         <select name="id_mesas" id="id_mesas"
-                            class="w-full border-gray-300 rounded-md bg-white text-black dark:bg-white dark:text-black" required>
+                            class="w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" required>
                             <option value="{{ $orden->mesa->id }}">Mesa {{ $orden->mesa->numero }}</option>
                         </select>
                     </div>
@@ -140,12 +148,13 @@
     {{-- Scripts --}}
     <script>
         let count = {{ count($orden->detalles_orden) }};
+        const platillosSeleccionados = {}; // Guarda los platillos ya agregados
 
         function actualizarResumen() {
             let subtotal = 0;
             document.querySelectorAll('#platillos-container > div').forEach(div => {
                 const precio = parseFloat(div.dataset.precio);
-                const cantidad = parseInt(div.querySelector('input[type=number]').value);
+                const cantidad = parseInt(div.querySelector('.cantidad').value);
                 subtotal += precio * cantidad;
             });
             const impuesto = subtotal * 0.13;
@@ -158,14 +167,31 @@
 
         function addPlatillo(id, nombre, precio) {
             const container = document.getElementById('platillos-container');
+
+            // Si el platillo ya está en la lista, solo aumenta la cantidad
+            if (platillosSeleccionados[id]) {
+                const inputCantidad = document.querySelector(`#platillo-${id} .cantidad`);
+                inputCantidad.value = parseInt(inputCantidad.value) + 1;
+                actualizarResumen();
+                return;
+            }
+
+            // Marcar como seleccionado
+            platillosSeleccionados[id] = true;
+
             const html = `
-                <div class="flex gap-2 items-center" data-precio="${precio}">
+                <div id="platillo-${id}" class="flex gap-2 items-center" data-precio="${precio}">
                     <input type="hidden" name="platillos[${count}][id_menu]" value="${id}">
                     <span class="flex-1">${nombre} - $${precio.toFixed(2)}</span>
-                    <input type="number" name="platillos[${count}][cantidad]" value="1" min="1"
-                           class="w-20 border-gray-300 rounded-md bg-white text-black dark:bg-white dark:text-black"
-                           onchange="actualizarResumen()">
-                    <button type="button" onclick="this.parentElement.remove(); actualizarResumen();" class="px-2 py-1 text-red-500">X</button>
+
+                    <div class="flex items-center border rounded-md overflow-hidden">
+                        <button type="button" onclick="cambiarCantidad(${id}, -1)" class="px-2 py-1 bg-gray-200 dark:bg-gray-600">−</button>
+                        <input type="text" readonly name="platillos[${count}][cantidad]" 
+                            value="1" class="cantidad w-12 text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                        <button type="button" onclick="cambiarCantidad(${id}, 1)" class="px-2 py-1 bg-gray-200 dark:bg-gray-600">+</button>
+                    </div>
+
+                    <button type="button" onclick="eliminarPlatillo(${id})" class="px-2 py-1 text-red-500">✕</button>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', html);
@@ -173,6 +199,141 @@
             actualizarResumen();
         }
 
+        function cambiarCantidad(id, cambio) {
+            const input = document.querySelector(`#platillo-${id} .cantidad`);
+            let nuevaCantidad = parseInt(input.value) + cambio;
+            if (nuevaCantidad < 1) return; // No permitir cantidades menores a 1
+            input.value = nuevaCantidad;
+            actualizarResumen();
+        }
+
+        function eliminarPlatillo(id) {
+            document.getElementById(`platillo-${id}`).remove();
+            delete platillosSeleccionados[id]; // Permite volver a agregarlo
+            actualizarResumen();
+        }
+
+        // Cargar mesas según el área seleccionada (manteniendo funcionalidad anterior)
+        document.getElementById('id_area_mesas').addEventListener('change', function() {
+            const areaId = this.value;
+            const mesaSelect = document.getElementById('id_mesas');
+            mesaSelect.innerHTML = '<option value="">Cargando mesas...</option>';
+
+            if (areaId) {
+                fetch(`/areas/${areaId}/mesas-disponibles`)
+                    .then(res => res.json())
+                    .then(data => {
+                        mesaSelect.innerHTML = '<option value="">-- Selecciona una mesa --</option>';
+                        data.forEach(mesa => {
+                            mesaSelect.innerHTML += `<option value="${mesa.id}">Mesa ${mesa.numero} (${mesa.capacidad} personas)</option>`;
+                        });
+                    });
+            }
+        });
+
+        // Marcar los platillos que ya existen en la orden (del backend)
+        @foreach($orden->detalles_orden as $detalle)
+            platillosSeleccionados[{{ $detalle->menu->id }}] = true;
+        @endforeach
+
+        // Convertir los inputs actuales en controles con +/-
+        document.querySelectorAll('#platillos-container > div').forEach(div => {
+            const id = div.querySelector('input[type=hidden]').value;
+            const cantidadInput = div.querySelector('input[type=number]');
+            const cantidad = cantidadInput.value;
+            const precio = div.dataset.precio;
+            const nombre = div.querySelector('span').innerText.split(' - ')[0];
+
+            // Reemplazar contenido con formato actualizado
+            div.outerHTML = `
+                <div id="platillo-${id}" class="flex gap-2 items-center" data-precio="${precio}">
+                    <input type="hidden" name="platillos[${id}][id_menu]" value="${id}">
+                    <span class="flex-1">${nombre} - $${parseFloat(precio).toFixed(2)}</span>
+
+                    <div class="flex items-center border rounded-md overflow-hidden">
+                        <button type="button" onclick="cambiarCantidad(${id}, -1)" class="px-2 py-1 bg-gray-200 dark:bg-gray-600">−</button>
+                        <input type="text" readonly name="platillos[${id}][cantidad]" 
+                            value="${cantidad}" class="cantidad w-12 text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                        <button type="button" onclick="cambiarCantidad(${id}, 1)" class="px-2 py-1 bg-gray-200 dark:bg-gray-600">+</button>
+                    </div>
+
+                    <button type="button" onclick="eliminarPlatillo(${id})" class="px-2 py-1 text-red-500">✕</button>
+                </div>
+            `;
+        });
+
         actualizarResumen();
+
+        function openTab(index) {
+            @foreach($categorias as $i => $categoria)
+                document.getElementById('tab-content-{{ $i }}').classList.add('hidden');
+                document.getElementById('tab-btn-{{ $i }}').classList.remove('border-primary', 'font-semibold');
+            @endforeach
+            document.getElementById('tab-content-' + index).classList.remove('hidden');
+            document.getElementById('tab-btn-' + index).classList.add('border-primary', 'font-semibold');
+        }
+
+        // 🔎 Búsqueda de platillos con AJAX
+        const inputBusqueda = document.getElementById('buscar-platillo');
+        const contenedorResultados = document.getElementById('resultados-busqueda');
+        const listaResultados = document.getElementById('lista-resultados');
+        let timeoutBusqueda = null;
+
+        inputBusqueda.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            if (query.length === 0) {
+                contenedorResultados.classList.add('hidden');
+                listaResultados.innerHTML = '';
+                return;
+            }
+
+            clearTimeout(timeoutBusqueda);
+            timeoutBusqueda = setTimeout(() => {
+                fetch(`/menus/buscar?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        listaResultados.innerHTML = '';
+
+                        if (data.length === 0) {
+                            listaResultados.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-2">Sin resultados</p>`;
+                            contenedorResultados.classList.remove('hidden');
+                            return;
+                        }
+
+                        contenedorResultados.classList.remove('hidden');
+
+                        data.forEach(menu => {
+                            const imagen = menu.imagen 
+                                ? `/storage/${menu.imagen}` 
+                                : '/images/default-platillo.jpg';
+
+                            const div = document.createElement('div');
+                            div.className = 'group cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow p-2 hover:ring-2 hover:ring-primary transition';
+                            div.style.display = 'flex';
+                            div.style.flexDirection = 'column';
+                            div.style.alignItems = 'center';
+                            div.innerHTML = `
+                                <div class="aspect-square w-full rounded-lg bg-cover bg-center"
+                                    style="background-image: url('${imagen}')"></div>
+                                <p class="mt-2 text-sm font-medium text-center text-gray-800 dark:text-gray-200 group-hover:text-primary">
+                                    ${menu.nombre}<br>$${parseFloat(menu.precio).toFixed(2)}
+                                </p>
+                            `;
+                            div.addEventListener('click', () => {
+                                addPlatillo(menu.id, menu.nombre, parseFloat(menu.precio)); // ✅ se pasa precio numérico
+                                //contenedorResultados.classList.add('hidden');
+                                //inputBusqueda.value = '';
+                            });
+
+                            listaResultados.appendChild(div);
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error al buscar platillos:', err);
+                    });
+            }, 400);
+        });
     </script>
+
 </x-app-layout>

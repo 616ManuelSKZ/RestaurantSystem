@@ -13,6 +13,9 @@ class Orden extends Model
         'id_users',
         'estado',
         'fecha_orden',
+        'subtotal',
+        'impuestos',
+        'totaliva',
     ];
 
     public function mesa()
@@ -28,6 +31,11 @@ class Orden extends Model
     public function detalles_orden()
     {
         return $this->hasMany(DetalleOrden::class, 'id_orden');
+    }
+
+    public function factura()
+    {
+        return $this->hasOne(Factura::class, 'id_orden');
     }
 
     public function getTotalAttribute()

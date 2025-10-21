@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('id_users')->constrained('users')->onDelete('cascade');
             $table->string('estado');
             $table->dateTime('fecha_orden');
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('impuestos', 10, 2)->default(0);
+            $table->decimal('totaliva', 10, 2)->default(0);
             $table->timestamps();
         });
     }

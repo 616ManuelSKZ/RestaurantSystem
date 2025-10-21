@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <!-- Scripts -->
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
@@ -20,6 +21,45 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark relative">
+    @if (session('success'))
+        <div 
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 4000)"
+            class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg"
+        >
+            <!-- Icono -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+
+            <!-- Mensaje -->
+            <span class="text-sm font-medium">{{ session('success') }}</span>
+
+            <!-- Botón cerrar -->
+            <button @click="show = false" class="ml-3 hover:text-gray-200">
+                ✕
+            </button>
+        </div>
+    @endif
+    @if (session('error'))
+        <div 
+            x-data="{ show: true }"
+            x-show="show"
+            x-transition
+            x-init="setTimeout(() => show = false, 5000)"
+            class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span class="text-sm font-medium">{{ session('error') }}</span>
+            <button @click="show = false" class="ml-3 hover:text-gray-200">✕</button>
+        </div>
+    @endif
+
+
     <div class="min-h-screen flex">
 
         {{-- Sidebar Izquierdo --}}

@@ -13,6 +13,13 @@ class Factura extends Model
         'id_users',
         'tipo_factura',
         'fecha_emision',
+        'nombre_cliente',
+        'nit_cliente',
+        'direccion_cliente',
+        'telefono_cliente',
+        'subtotal',
+        'impuestos',
+        'totaliva',
         'total',
     ];
 

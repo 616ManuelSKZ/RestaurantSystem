@@ -13,6 +13,7 @@ class DetalleFactura extends Model
         'id_menu',
         'cantidad',
         'precio_unitario',
+        'subtotal',
         'nombre_menu',
         'precio_menu',
     ];

@@ -5,30 +5,55 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto py-6 px-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-border-light dark:border-border-dark transition-colors duration-300">
+    <div x-data="{ 
+            modalCategoriaCreate: false, 
+            filtroCategoria: '' 
+        }" class="max-w-7xl mx-auto py-6 px-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-border-light dark:border-border-dark transition-colors duration-300">
 
-        {{-- Botón agregar categoría --}}
-        <div x-data="{ modalVisible: false }">
-            <div class="flex justify-end mb-8">
-                <button @click="modalVisible = true"
-                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-sm transition">
-                    + Agregar Categoría
-                </button>
+        {{-- Encabezado: filtro + botón --}}
+        <div class="flex justify-between items-center mb-8">
+
+            {{-- Filtro por categoría --}}
+            <div class="flex items-center gap-3 w-1/3">
+                <label for="filtroCategoria" class="text-gray-800 dark:text-gray-300 font-medium">
+                    Filtrar Categoría:
+                </label>
+                <select id="filtroCategoria" x-model="filtroCategoria"
+                    class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:ring-primary focus:border-primary">
+                    <option value="">Todas</option>
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
             </div>
 
-            {{-- Modal de agregar categoría --}}
-            <div x-show="modalVisible"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" x-cloak>
-                <div class="bg-white dark:bg-background-dark/50 rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
-                    <h2 class="text-lg font-semibold mb-4">Crear Categoria</h2>
-                    @include('categorias.create')
-                </div>
+            {{-- Botón agregar categoría --}}
+            <button @click="modalCategoriaCreate = true"
+                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-sm transition">
+                + Agregar Categoría
+            </button>
+        </div>
+
+        {{-- Modal de agregar categoría --}}
+        <div x-show="modalCategoriaCreate"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" x-cloak>
+            <div class="bg-white dark:bg-background-dark/100 rounded-lg shadow-lg p-6 w-full max-w-md mx-4 relative">
+                <button @click="modalCategoriaCreate = false"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+                    ✕
+                </button>
+                <h2 class="text-lg font-semibold mb-4">Crear Categoría</h2>
+                @include('categorias.create')
             </div>
         </div>
 
-        @foreach($categorias as $categoria)
-            <div class="mb-10 border border-primary/20 dark:border-primary/30 rounded-2xl shadow-sm overflow-hidden bg-white dark:bg-background-dark/50">
-                
+        {{-- Listado de categorías --}}
+        @foreach ($categorias as $categoria)
+            <div 
+                x-show="!filtroCategoria || filtroCategoria == '{{ $categoria->id }}'" 
+                x-transition
+                class="mb-10 border border-primary/20 dark:border-primary/30 rounded-2xl shadow-sm overflow-hidden bg-white dark:bg-background-dark/50"
+            >
                 {{-- Header de categoría --}}
                 <div class="flex justify-between items-center px-6 py-4 bg-primary/5 dark:bg-primary/10 border-b border-primary/20 dark:border-primary/30">
                     <div class="flex items-center gap-3">
@@ -36,25 +61,39 @@
                             {{ $categoria->nombre }}
                         </h3>
 
-                        {{-- Botones de acción (editar y eliminar) --}}
+                        {{-- Botones de acción --}}
                         <div class="flex items-center gap-2">
                             {{-- Editar --}}
-                            <a href="{{ route('categorias.edit', $categoria->id) }}"
-                                class="text-blue-600 hover:text-blue-800 transition"
-                                title="Editar categoría">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M16.862 4.487l1.651 1.65a1.5 1.5 0 010 2.122l-9.193 9.192a4.5 4.5 0 01-1.591 1.02l-3.347 1.116a.75.75 0 01-.948-.948l1.116-3.347a4.5 4.5 0 011.02-1.59l9.193-9.193a1.5 1.5 0 012.122 0z" />
-                                </svg>
-                            </a>
+                            <div x-data="{ modalCategoriaEdit: false }">
+                                <button @click="modalCategoriaEdit = true"
+                                    class="text-blue-600 hover:text-blue-800 transition"
+                                    title="Editar categoría">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M16.862 4.487l1.651 1.65a1.5 1.5 0 010 2.122l-9.193 9.192a4.5 4.5 0 01-1.591 1.02l-3.347 1.116a.75.75 0 01-.948-.948l1.116-3.347a4.5 4.5 0 011.02-1.59l9.193-9.193a1.5 1.5 0 012.122 0z" />
+                                    </svg>
+                                </button>
+
+                                {{-- Modal editar --}}
+                                <div x-show="modalCategoriaEdit"
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                    x-cloak x-transition>
+                                    <div
+                                        class="bg-white dark:bg-background-dark/100 rounded-lg shadow-lg p-6 w-full max-w-md mx-4 relative">
+                                        <button @click="modalCategoriaEdit = false"
+                                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+                                            ✕
+                                        </button>
+                                        <h2 class="text-lg font-semibold mb-4">Editar Categoría</h2>
+                                        @include('categorias.edit', ['categoria' => $categoria])
+                                    </div>
+                                </div>
+                            </div>
 
                             {{-- Eliminar --}}
-                            <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST"
-                                onsubmit="return confirm('¿Deseas eliminar esta categoría?');" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
+                            <div x-data="{ modalCategoriaDelete: false }" class="inline">
+                                <button @click="modalCategoriaDelete = true"
                                     class="text-red-600 hover:text-red-800 transition"
                                     title="Eliminar categoría">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -63,7 +102,47 @@
                                             d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                            </form>
+
+                                {{-- Modal eliminar --}}
+                                <div x-show="modalCategoriaDelete"
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                    x-cloak x-transition>
+                                    <div
+                                        class="bg-white dark:bg-background-dark/100 rounded-lg shadow-lg p-6 w-full max-w-md mx-4 relative">
+                                        <button @click="modalCategoriaDelete = false"
+                                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+                                            ✕
+                                        </button>
+
+                                        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                            Eliminar Categoría
+                                        </h2>
+
+                                        <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                            ¿Estás seguro de que deseas eliminar la categoría
+                                            <span
+                                                class="font-semibold text-gray-900 dark:text-gray-100">"{{ $categoria->nombre }}"</span>?
+                                            <br> Esta acción no se puede deshacer.
+                                        </p>
+
+                                        <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST"
+                                            class="flex justify-end gap-4">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="button" @click="modalCategoriaDelete = false"
+                                                class="px-6 py-2 rounded-lg text-sm font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200">
+                                                Cancelar
+                                            </button>
+
+                                            <button type="submit"
+                                                class="px-6 py-2 rounded-lg text-sm font-semibold bg-red-600 hover:bg-red-700 text-white shadow-sm transition">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -99,6 +178,14 @@
                                                     alt="{{ $menu->nombre }}"
                                                     class="w-14 h-14 rounded-lg object-cover cursor-pointer shadow-sm hover:scale-105 transition"
                                                     @click="imagenActual = '{{ asset('storage/' . $menu->imagen) }}'; modalVisible = true;">
+                                            @else
+                                                <div
+                                                    class="w-14 h-14 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center cursor-pointer shadow-sm hover:scale-105 transition"
+                                                    @click="imagenActual = '/images/no-image.png'; modalVisible = true;">
+                                                    <span class="text-gray-400 dark:text-gray-500 italic text-sm">
+                                                        Sin imagen
+                                                    </span>
+                                                </div>
                                             @endif
                                         </td>
 
@@ -123,20 +210,70 @@
 
                                         {{-- Acciones --}}
                                         <td class="py-3 px-6 text-center space-x-3">
+                                            {{-- Botón editar --}}
                                             <a href="{{ route('menus.edit', $menu) }}"
                                             class="inline-block px-3 py-1 text-xs font-semibold rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow-sm transition">
-                                            Editar
+                                                Editar
                                             </a>
-                                            <form action="{{ route('menus.destroy', $menu) }}" method="POST"
-                                                class="inline-block"
-                                                onsubmit="return confirm('¿Deseas eliminar este menú?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="px-3 py-1 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm transition">
+
+                                            {{-- Botón eliminar con modal --}}
+                                            <div x-data="{ modalEliminar: false }" class="inline-block">
+                                                <button 
+                                                    @click="modalEliminar = true"
+                                                    class="px-3 py-1 text-xs font-semibold rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm transition"
+                                                >
                                                     Eliminar
                                                 </button>
-                                            </form>
+
+                                                {{-- Modal de confirmación --}}
+                                                <div 
+                                                    x-show="modalEliminar"
+                                                    x-cloak
+                                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                                    x-transition
+                                                >
+                                                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md mx-4 relative">
+                                                        {{-- Encabezado --}}
+                                                        <div class="flex items-center gap-3 mb-4">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.93 19a9 9 0 1112.14 0H5.93z" />
+                                                            </svg>
+                                                            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                                                Confirmar eliminación
+                                                            </h2>
+                                                        </div>
+
+                                                        {{-- Mensaje --}}
+                                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                                            ¿Estás seguro de que deseas eliminar el menú 
+                                                            <span class="font-semibold text-gray-800 dark:text-gray-100">"{{ $menu->nombre }}"</span>?  
+                                                            Esta acción no se puede deshacer.
+                                                        </p>
+
+                                                        {{-- Botones --}}
+                                                        <div class="flex justify-end gap-3">
+                                                            <button 
+                                                                @click="modalEliminar = false"
+                                                                type="button"
+                                                                class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                                                            >
+                                                                Cancelar
+                                                            </button>
+
+                                                            <form action="{{ route('menus.destroy', $menu) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button 
+                                                                    type="submit"
+                                                                    class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition"
+                                                                >
+                                                                    Eliminar
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
