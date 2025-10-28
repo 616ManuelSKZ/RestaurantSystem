@@ -1,13 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Editar Orden') }}
         </h2>
     </x-slot>
 
-    <div class="flex h-screen overflow-hidden">
+    <div class="min-h-screen flex" x-data="{ sidebarOpen: false }">
         {{-- Aside: Menú de platillos --}}
-        <aside class="w-80 bg-background-light dark:bg-background-dark border-r border-primary/20 dark:border-primary/30 p-4 flex flex-col">
+        <aside
+            :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }"
+            class="fixed md:relative inset-y-0 left-0 z-40 w-80 md:w-80 bg-background-light dark:bg-background-dark border-r border-primary/20 dark:border-primary/30 p-4 flex flex-col transform transition-transform duration-300 ease-in-out md:translate-x-0">
 
             {{-- Buscador --}}
             <div class="mb-4 relative flex-shrink-0">
@@ -19,7 +21,7 @@
             </div>
             <div id="resultados-busqueda" class="mb-4 hidden">
                 <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Resultados de búsqueda</h3>
-                <div id="lista-resultados" class="grid grid-cols-2 gap-4"></div>
+                <div id="lista-resultados" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
             {{-- Pestañas de categorías --}}
@@ -38,39 +40,62 @@
                 </ul>
             </div>
 
-            {{-- Contenedor con scroll solo para las categorías --}}
-            <div class="grid grid-cols-2 gap-4">
-                @foreach($categoria->menus as $menu)
-                    <div 
-                        class="group cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow p-2 hover:ring-2 hover:ring-primary transition"
-                        style="display: flex; flex-direction: column; align-items: center;"
-                        onclick="addPlatillo({{ $menu->id }}, '{{ $menu->nombre }}', {{ $menu->precio }})"
-                    >
-                        <div 
-                            class="aspect-square w-full rounded-lg bg-cover bg-center"
-                            style="background-image: url('{{ $menu->imagen ? asset('storage/'.$menu->imagen) : '/images/default-platillo.jpg' }}');"
-                        ></div>
-                        
-                        <p class="mt-2 text-sm font-medium text-center text-gray-800 dark:text-gray-200 group-hover:text-primary">
-                            {{ $menu->nombre }}<br>
-                            ${{ number_format($menu->precio, 2) }}
-                        </p>
+            {{-- Contenedor con scroll para los grids --}}
+            <div class="flex-1 overflow-y-auto">
+                {{-- Contenedores de contenido por categoría --}}
+                @foreach($categorias as $index => $categoria)
+                    <div id="tab-content-{{ $index }}" class="grid grid-cols-1 sm:grid-cols-2 gap-4 {{ $index === 0 ? '' : 'hidden' }}">
+                        @foreach($categoria->menus as $menu)
+                            <div 
+                                class="group cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow p-2 hover:ring-2 hover:ring-primary transition"
+                                style="display: flex; flex-direction: column; align-items: center;"
+                                onclick="addPlatillo({{ $menu->id }}, '{{ $menu->nombre }}', {{ $menu->precio }})"
+                            >
+                                <div 
+                                    class="aspect-square w-full rounded-lg bg-cover bg-center"
+                                    style="background-image: url('{{ $menu->imagen ? asset('storage/'.$menu->imagen) : '/images/default-platillo.jpg' }}');"
+                                ></div>
+                                
+                                <p class="mt-2 text-sm font-medium text-center text-gray-800 dark:text-gray-200 group-hover:text-primary">
+                                    {{ $menu->nombre }}<br>
+                                    ${{ number_format($menu->precio, 2) }}
+                                </p>
+                            </div>
+                        @endforeach
                     </div>
                 @endforeach
             </div>
         </aside>
 
+        {{-- Overlay para móviles --}}
+        <div x-show="sidebarOpen" @click="sidebarOpen = false"
+            class="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
+            x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+        </div>
+
         {{-- Main: Formulario de orden --}}
-        <main class="flex-1 flex flex-col p-6 overflow-y-auto">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Editar Orden</h2>
+        <main class="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto md:ml-0">
+            {{-- Botón hamburguesa para móviles --}}
+            <button @click="sidebarOpen = !sidebarOpen" class="md:hidden mb-4 p-2 rounded-lg hover:bg-subtle-light dark:hover:bg-subtle-dark self-start">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Editar Orden</h2>
 
             <form action="{{ route('ordenes.update', $orden->id) }}" method="POST"
-                  class="bg-background-light dark:bg-background-dark rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm flex-1 flex flex-col p-6">
+                  class="bg-background-light dark:bg-background-dark rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm flex-1 flex flex-col p-4 md:p-6">
                 @csrf
                 @method('PUT')
 
                 {{-- Área y Mesa --}}
-                <div class="flex gap-4 mb-4">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
                     <div class="flex-1">
                         <label for="id_area_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Área de mesas</label>
                         <select name="id_area_mesas" id="id_area_mesas"
@@ -132,9 +157,9 @@
                 </div>
 
                 {{-- Botones --}}
-                <div class="mt-auto flex justify-end gap-4">
+                <div class="mt-auto flex flex-col sm:flex-row justify-end gap-4">
                     <a href="{{ route('ordenes.index') }}" 
-                       class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 text-gray-800 dark:text-gray-200">
+                       class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 text-gray-800 dark:text-gray-200 text-center">
                         Cancelar
                     </a>
                     <button type="submit" class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90">
@@ -282,9 +307,12 @@
         inputBusqueda.addEventListener('input', function() {
             const query = this.value.trim();
 
+            // Siempre ocultar el contenedor y limpiar la lista al inicio de cada input
+            contenedorResultados.classList.add('hidden');
+            listaResultados.innerHTML = '';
+
             if (query.length === 0) {
-                contenedorResultados.classList.add('hidden');
-                listaResultados.innerHTML = '';
+                clearTimeout(timeoutBusqueda); // Limpiar cualquier timeout pendiente
                 return;
             }
 
@@ -322,8 +350,6 @@
                             `;
                             div.addEventListener('click', () => {
                                 addPlatillo(menu.id, menu.nombre, parseFloat(menu.precio)); // ✅ se pasa precio numérico
-                                //contenedorResultados.classList.add('hidden');
-                                //inputBusqueda.value = '';
                             });
 
                             listaResultados.appendChild(div);
@@ -335,5 +361,4 @@
             }, 400);
         });
     </script>
-
 </x-app-layout>

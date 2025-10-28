@@ -14,19 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::updateOrCreate(
-            ['email' => 'admin@admin.com'], // Condición para buscar al usuario
-
-            [ // Datos a insertar/actualizar
-                'name' => 'Admin',
-                'password' => Hash::make('admin123'),
-                'rol' => 'administrador',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        );
+        $this->call([
+            UserSeeder::class,
+            AreaMesasSeeder::class,
+            MesasSeeder::class,
+            CategoriasSeeder::class,
+            MenusSeeder::class,
+            OrdenesSeeder::class,
+            DetallesOrdenSeeder::class,
+            FacturasSeeder::class,
+            DetallesFacturaSeeder::class,
+        ]);
     }
 }

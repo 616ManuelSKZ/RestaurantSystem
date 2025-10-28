@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('id_area_mesas')->constrained('area_mesas')->onDelete('cascade');
             $table->integer('numero');
             $table->integer('capacidad');
-            $table->enum('estado', ['disponible', 'ocupada', 'reservada'])->default('disponible');
+            $table->enum('estado', ['disponible', 'ocupada'])->default('disponible');
             $table->timestamps();
         });
     }

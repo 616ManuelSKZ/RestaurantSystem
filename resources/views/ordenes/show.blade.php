@@ -1,9 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-text-light dark:text-text-dark leading-tight">
-            Orden #{{ $orden->id }} — Mesa {{ $orden->mesa->numero }}
+            Orden #{{ $orden->id }} — Mesa {{ $orden->mesa->numero ?? 'N/A' }}
         </h2>
     </x-slot>
+
+        @php
+            $rol = auth()->user()->rol;
+        @endphp
 
     <div class="max-w-6xl mx-auto py-8 px-6 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-border-light dark:border-border-dark transition-colors duration-300">
         {{-- Información principal --}}
@@ -97,37 +101,45 @@
         {{-- Botones de acción --}}
         <div class="mt-8 flex flex-col md:flex-row gap-4 justify-end">
             @if($orden->estado === 'En Preparación')
-                <form action="{{ route('ordenes.cancelar', $orden->id) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow">
-                        Cancelar Orden
-                    </button>
-                </form>
-                <form action="{{ route('ordenes.actualizarEstado', $orden->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" name="estado" value="Lista">
-                    <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow">
-                        Marcar como Lista
-                    </button>
-                </form>
+                @if($rol === 'mesero')
+                    <form action="{{ route('ordenes.cancelar', $orden->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow">
+                            Cancelar Orden
+                        </button>
+                    </form>
+                @endif
+                @if($rol === 'cocinero')
+                    <form action="{{ route('ordenes.actualizarEstado', $orden->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="estado" value="Lista">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition shadow">
+                            Marcar como Lista
+                        </button>
+                    </form>
+                @endif
             @elseif($orden->estado === 'Lista')
-                <form action="{{ route('ordenes.cancelar', $orden->id) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow">
-                        Cancelar Orden
-                    </button>
-                </form>
-                <form action="{{ route('ordenes.actualizarEstado', $orden->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" name="estado" value="Servida">
-                    <button type="submit" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition shadow">
-                        Marcar como Servida
-                    </button>
-                </form>
+                @if($rol === 'mesero')
+                    <form action="{{ route('ordenes.cancelar', $orden->id) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow">
+                            Cancelar Orden
+                        </button>
+                    </form>
+                @endif
+                @if($rol === 'cocinero')
+                    <form action="{{ route('ordenes.actualizarEstado', $orden->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="estado" value="Servida">
+                        <button type="submit" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition shadow">
+                            Marcar como Servida
+                        </button>
+                    </form>
+                @endif
             @endif
         </div>
     </div>

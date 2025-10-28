@@ -4,10 +4,12 @@
 
     <!-- Nombre -->
     <div class="mb-4">
-        <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Nombre de la Categoría</label>
-        <input type="text" name="nombre" id="nombre"
-            value="{{ old('nombre', $categoria->nombre) }}"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white" required>
+        <label for="nombre" class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre de la
+            Categoría</label>
+        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $categoria->nombre) }}"
+            class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+            required>
     </div>
 
     {{-- Botones --}}

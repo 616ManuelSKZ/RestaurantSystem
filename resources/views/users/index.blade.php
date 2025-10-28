@@ -5,11 +5,15 @@
         </h2>
     </x-slot>
 
+        @php
+            $role = auth()->user()->rol;
+        @endphp
+
     <main class="flex-1 p-8 bg-gray-50 dark:bg-background-dark/20 min-h-screen">
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- 🔹 Botón Crear Usuario --}}
+            {{-- Botón Crear Usuario --}}
             <div class="mb-6 flex justify-end">
                 <a href="{{ route('users.create') }}"
                    class="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition">
@@ -17,7 +21,7 @@
                 </a>
             </div>
 
-            {{-- 🔹 Tabla de Usuarios --}}
+            {{-- Tabla de Usuarios --}}
             <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-primary/20 dark:border-primary/30 overflow-hidden shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
@@ -52,22 +56,59 @@
                                                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300">Desconocido</span>
                                         @endswitch
                                     </td>
-                                    <td class="px-6 py-4 text-center space-x-2">
-                                        {{-- Editar --}}
+                                    <td class="px-6 py-4 text-center space-x-2"
+                                        x-data="{ modalUserDelete: false, userId: '{{ $user->id }}', userName: '{{ $user->name }}' }">
+
+                                        {{-- Botón Editar --}}
                                         <a href="{{ route('users.edit', $user) }}"
-                                           class="inline-flex items-center px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-sm transition">
+                                        class="inline-flex items-center px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-sm transition">
                                             Editar
                                         </a>
 
-                                        {{-- Eliminar --}}
-                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
+                                        {{-- Botón Eliminar (solo si no es admin o no es el mismo usuario) --}}
+                                        @if($role !== 'administrador' || auth()->user()->id !== $user->id)
+                                            <button type="button" @click="modalUserDelete = true"
                                                     class="inline-flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-sm transition">
                                                 Eliminar
                                             </button>
-                                        </form>
+
+                                            {{-- Modal eliminar usuario --}}
+                                            <div x-show="modalUserDelete"
+                                                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                                x-cloak x-transition>
+                                                <div class="bg-white dark:bg-background-dark/100 rounded-lg shadow-lg p-6 w-full max-w-md mx-4 relative">
+                                                    <button @click="modalUserDelete = false"
+                                                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+                                                        ✕
+                                                    </button>
+
+                                                    <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                                        Eliminar Usuario
+                                                    </h2>
+
+                                                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                                                        ¿Estás seguro de que deseas eliminar al usuario
+                                                        <span class="font-semibold text-gray-900 dark:text-gray-100" x-text="userName"></span>?
+                                                        <br> Esta acción no se puede deshacer.
+                                                    </p>
+
+                                                    <form :action="`/users/${userId}`" method="POST" class="flex justify-end gap-4">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="button" @click="modalUserDelete = false"
+                                                                class="px-6 py-2 rounded-lg text-sm font-semibold bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200">
+                                                            Cancelar
+                                                        </button>
+
+                                                        <button type="submit"
+                                                                class="px-6 py-2 rounded-lg text-sm font-semibold bg-red-600 hover:bg-red-700 text-white shadow-sm transition">
+                                                            Eliminar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

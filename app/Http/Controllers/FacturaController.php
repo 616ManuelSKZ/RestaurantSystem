@@ -55,7 +55,7 @@ class FacturaController extends Controller
 
         $orden = Orden::with('detalles_orden.menu')->findOrFail($request->id_orden);
 
-        // 🔹 Crear la factura con los totales de la orden
+        // Crear la factura con los totales de la orden
         $factura = Factura::create([
             'id_orden'    => $orden->id,
             'id_users'    => $request->id_users,
@@ -73,7 +73,7 @@ class FacturaController extends Controller
             'total'       => $orden->totaliva, // si quieres que "total" sea igual al total con IVA
         ]);
 
-        // 🔹 Copiar detalles de la orden a la factura
+        // Copiar detalles de la orden a la factura
         foreach ($orden->detalles_orden as $detalle) {
             DetalleFactura::create([
                 'id_factura'      => $factura->id,
@@ -100,11 +100,11 @@ class FacturaController extends Controller
     public function exportPDF(Factura $factura)
     {
         $pdf = PDF::loadView('facturas.pdf', compact('factura'));
-        return $pdf->download("factura_{$factura->id}.pdf");
+        return $pdf->stream("factura_{$factura->id}.pdf");
     }
 
     /** Exportar a XML */
-    /** 🔹 Exportar Factura a XML */
+    /** Exportar Factura a XML */
     public function exportXML(Factura $factura)
     {
         $xml = new \SimpleXMLElement('<factura/>');
@@ -164,7 +164,7 @@ class FacturaController extends Controller
         $query = Factura::query();
         $titulo = 'Ventas Totales';
 
-        // 🔹 Validar fechas si se enviaron ambas
+        // Validar fechas si se enviaron ambas
         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
 
             // Verificar que la fecha fin no sea menor que la inicio
@@ -179,7 +179,7 @@ class FacturaController extends Controller
             $titulo = "Ventas del {$fechaInicio->format('d/m/Y')} al {$fechaFin->format('d/m/Y')}";
         }
 
-        // 🔹 Manejar botones rápidos (día, semana, mes, año, total)
+        // Manejar botones rápidos (día, semana, mes, año, total)
         elseif ($request->filled('periodo')) {
             switch ($request->periodo) {
                 case 'dia':
@@ -209,19 +209,19 @@ class FacturaController extends Controller
             }
         }
 
-        // 🔹 Obtener facturas filtradas
+        // Obtener facturas filtradas
         $facturas = $query->orderBy('fecha_emision', 'desc')->get();
         $total = $facturas->sum('total');
 
-        // 🔹 Si no hay facturas, mostrar mensaje de advertencia
+        // Si no hay facturas, mostrar mensaje de advertencia
         if ($facturas->isEmpty()) {
             return back()->with('warning', 'No se encontraron facturas en el rango seleccionado.');
         }
 
-        // 🔹 Generar el PDF
+        // Generar el PDF
         $pdf = PDF::loadView('facturas.pdf_resumen', compact('facturas', 'total', 'titulo'));
 
-        // 🔹 Nombre del archivo más descriptivo
+        // Nombre del archivo más descriptivo
         $nombreArchivo = Str::slug($titulo, '_') . '.pdf';
 
         return $pdf->stream($nombreArchivo);

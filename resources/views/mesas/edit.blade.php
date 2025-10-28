@@ -7,90 +7,89 @@
 
     <main class="flex-1 p-8 bg-gray-50 dark:bg-background-dark/20 min-h-screen">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm p-6">
+            <div
+                class="bg-white dark:bg-background-dark/50 rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm p-6">
 
                 <form action="{{ route('mesas.update', $mesa) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    {{-- 🔹 Área --}}
+                    <!-- Área -->
                     <div class="mb-6">
-                        <x-input-label for="id_area_mesas" :value="__('Área')" class="text-gray-900 dark:text-gray-400" />
-                        <select name="id_area_mesas" id="id_area_mesas"
-                                class="block mt-1 w-full border-gray-300 dark:border-gray-600 
-                                       focus:border-indigo-500 focus:ring-indigo-500 
-                                       rounded-md shadow-sm bg-white dark:bg-background-dark/50 
-                                       text-gray-900 dark:text-white">
+                        <label for="id_area_mesas" class="block text-gray-700 dark:text-gray-300 font-semibold">
+                            Área
+                        </label>
+                        <select name="id_area_mesas" id="id_area_mesas" class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
                             @foreach ($areas as $area)
-                                <option value="{{ $area->id }}"
-                                    {{ old('id_area_mesas', $mesa->id_area_mesas) == $area->id ? 'selected' : '' }}>
-                                    {{ $area->nombre }}
-                                </option>
+                            <option value="{{ $area->id }}"
+                                {{ old('id_area_mesas', $mesa->id_area_mesas) == $area->id ? 'selected' : '' }}>
+                                {{ $area->nombre }}
+                            </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('id_area_mesas')" class="mt-2" />
+                        @error('id_area_mesas')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- 🔹 Número de Mesa --}}
+                    <!-- Número de Mesa -->
                     <div class="mb-6">
-                        <x-input-label for="numero" :value="__('Número de Mesa')" class="text-gray-900 dark:text-gray-400" />
-                        <x-text-input id="numero" 
-                                      name="numero"
-                                      type="number"
-                                      :value="old('numero', $mesa->numero)"
-                                      required
-                                      class="block mt-1 w-full border-gray-300 dark:border-gray-600 
-                                             focus:border-indigo-500 focus:ring-indigo-500 
-                                             rounded-md shadow-sm bg-white dark:bg-background-dark/50 
-                                             text-gray-900 dark:text-white" />
-                        <x-input-error :messages="$errors->get('numero')" class="mt-2" />
+                        <label for="numero" class="block text-gray-700 dark:text-gray-300 font-semibold">
+                            Número de Mesa
+                        </label>
+                        <input id="numero" name="numero" type="number" value="{{ old('numero', $mesa->numero) }}"
+                            required class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                        @error('numero')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- 🔹 Capacidad --}}
+                    <!-- Capacidad -->
                     <div class="mb-6">
-                        <x-input-label for="capacidad" :value="__('Capacidad')" class="text-gray-900 dark:text-gray-400" />
-                        <x-text-input id="capacidad" 
-                                      name="capacidad"
-                                      type="number"
-                                      :value="old('capacidad', $mesa->capacidad)"
-                                      required
-                                      class="block mt-1 w-full border-gray-300 dark:border-gray-600 
-                                             focus:border-indigo-500 focus:ring-indigo-500 
-                                             rounded-md shadow-sm bg-white dark:bg-background-dark/50 
-                                             text-gray-900 dark:text-white" />
-                        <x-input-error :messages="$errors->get('capacidad')" class="mt-2" />
+                        <label for="capacidad" class="block text-gray-700 dark:text-gray-300 font-semibold">
+                            Capacidad
+                        </label>
+                        <input id="capacidad" name="capacidad" type="number"
+                            value="{{ old('capacidad', $mesa->capacidad) }}" required class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                        @error('capacidad')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- 🔹 Estado --}}
+                    <!-- Estado -->
                     <div class="mb-6">
-                        <x-input-label for="estado" :value="__('Estado')" class="text-gray-900 dark:text-gray-400" />
-                        <select id="estado" name="estado"
-                                class="block mt-1 w-full border-gray-300 dark:border-gray-600 
-                                       focus:border-indigo-500 focus:ring-indigo-500 
-                                       rounded-md shadow-sm bg-white dark:bg-background-dark/50 
-                                       text-gray-900 dark:text-white">
-                            <option value="disponible" {{ old('estado', $mesa->estado) == 'disponible' ? 'selected' : '' }}>Disponible</option>
-                            <option value="ocupada" {{ old('estado', $mesa->estado) == 'ocupada' ? 'selected' : '' }}>Ocupada</option>
-                            <option value="reservada" {{ old('estado', $mesa->estado) == 'reservada' ? 'selected' : '' }}>Reservada</option>
+                        <label for="estado" class="block text-gray-700 dark:text-gray-300 font-semibold">
+                            Estado
+                        </label>
+                        <select id="estado" name="estado" class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="disponible"
+                                {{ old('estado', $mesa->estado) == 'disponible' ? 'selected' : '' }}>Disponible</option>
+                            <option value="ocupada" {{ old('estado', $mesa->estado) == 'ocupada' ? 'selected' : '' }}>
+                                Ocupada</option>
                         </select>
-                        <x-input-error :messages="$errors->get('estado')" class="mt-2" />
+                        @error('estado')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- 🔹 Botones --}}
+                    <!-- Botones -->
                     <div class="mt-8 flex justify-end gap-4">
-                        <a href="{{ route('mesas.index') }}" 
-                           class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 
-                                  text-gray-800 dark:text-gray-200 transition">
+                        <a href="{{ route('mesas.index') }}" class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 
+                  text-gray-800 dark:text-gray-200 transition">
                             Cancelar
                         </a>
 
-                        <button type="submit" 
-                                class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90 transition">
+                        <button type="submit"
+                            class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90 transition">
                             Actualizar Mesa
                         </button>
                     </div>
-
                 </form>
+
             </div>
         </div>
     </main>

@@ -38,7 +38,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'rol' => 'required|string|max:50',
@@ -87,7 +87,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users,name,' . $id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
             'rol' => 'required|string|max:50',
@@ -115,5 +115,20 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+    }
+
+    public function verificarUnico(Request $request)
+    {
+        $campo = $request->input('campo');
+        $valor = $request->input('valor');
+        $userId = $request->input('userId');
+
+        $query = \App\Models\User::where($campo, $valor);
+
+        if ($userId) {
+            $query->where('id', '<>', $userId);
+        }
+
+        return response()->json(['existe' => $query->exists()]);
     }
 }

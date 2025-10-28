@@ -122,7 +122,7 @@
             <p><strong>Mesa:</strong> {{ $factura->orden->mesa->numero ?? 'Sin mesa' }}</p>
             <p><strong>Fecha de Emisión:</strong> {{ $factura->fecha_emision }}</p>
             <p><strong>Tipo de Factura:</strong> {{ ucfirst($factura->tipo_factura) }}</p>
-            <p><strong>Atendido por:</strong> {{ $factura->user->name ?? 'No asignado' }}</p>
+            <p><strong>Atendido por:</strong> {{ $factura->orden->user->name ?? 'No asignado' }}</p>
         </div>
     </div>
 

@@ -8,73 +8,107 @@
     <main class="flex-1 p-8 bg-gray-50 dark:bg-background-dark/20 min-h-screen">
 
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm p-6">
+            <div
+                class="bg-white dark:bg-background-dark/50 rounded-xl border border-primary/20 dark:border-primary/30 shadow-sm p-6">
 
                 <form method="POST" action="{{ route('menus.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Imagen --}}
+                    <!-- Imagen -->
                     <div class="mb-6">
-                        <label for="imagen" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Subir imagen</label>
-                        <div class="flex flex-col md:flex-row items-start gap-6">
-                            <div class="w-full md:w-1/2">
-                                <input 
-                                    type="file" name="imagen" id="imagen" accept="image/*" onchange="previewImagen(event)"
-                                    class="block w-full text-bs text-gray-900 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-background-dark/50 focus:outline-none"
-                                />
-                                <x-input-error :messages="$errors->get('imagen')" class="mt-2 text-sm text-red-600" />
+                        <label for="imagen" class="block text-gray-700 dark:text-gray-300 font-semibold">
+                            Subir imagen
+                        </label>
+
+                        <div class="flex flex-col items-center gap-4">
+                            <!-- Vista previa centrada arriba -->
+                            <div class="w-full flex justify-center">
+                                <img id="preview-imagen" src="#" alt="Vista previa de imagen"
+                                    class="hidden w-full max-w-sm h-auto border rounded object-cover"/>
                             </div>
-                            <div class="w-full md:w-1/2">
-                                <img id="preview-imagen" src="#" alt="Vista previa de imagen" class="hidden w-full h-auto border rounded" />
+
+                            <!-- Input de imagen a todo el ancho -->
+                            <div class="w-full">
+                                <input type="file" name="imagen" id="imagen" accept="image/*" onchange="previewImagen(event)"
+                                    class="block w-full text-bs text-gray-900 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-background-dark/50 focus:outline-none"/>
+                                @error('imagen')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
 
-                    {{-- Nombre --}}
+                    <!-- Nombre -->
                     <div class="mb-6">
-                        <x-input-label for="nombre" :value="__('Nombre')" class="text-gray-900 dark:text-gray-400" />
-                        <x-text-input id="nombre" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="nombre" />
-                        <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
+                        <label for="nombre"
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre</label>
+                        <input id="nombre" name="nombre" type="text" required autofocus autocomplete="nombre"
+                            value="{{ old('nombre') }}"
+                            class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                        @error('nombre')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- Descripción --}}
+                    <!-- Descripción -->
                     <div class="mb-6">
-                        <x-input-label for="descripcion" :value="__('Descripción')" class="text-gray-900 dark:text-gray-400" />
-                        <textarea id="descripcion" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" name="descripcion" required>{{ old('descripcion') }}</textarea>
-                        <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
+                        <label for="descripcion"
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" required
+                            class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">{{ old('descripcion') }}</textarea>
+                        @error('descripcion')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {{-- Precio --}}
+                        <!-- Precio -->
                         <div>
-                            <x-input-label for="precio" :value="__('Precio')" class="text-gray-900 dark:text-gray-400" />
-                            <x-text-input id="precio" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" type="number" step="0.01" name="precio" :value="old('precio')" required autocomplete="precio" />
-                            <x-input-error :messages="$errors->get('precio')" class="mt-2" />
+                            <label for="precio"
+                                class="block text-gray-700 dark:text-gray-300 font-semibold">Precio</label>
+                            <input id="precio" name="precio" type="number" step="0.01" required autocomplete="precio"
+                                value="{{ old('precio') }}"
+                                class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                            @error('precio')
+                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        {{-- Disponibilidad --}}
+                        <!-- Disponibilidad -->
                         <div>
-                            <x-input-label for="disponible" :value="__('Disponibilidad')" class="text-gray-900 dark:text-gray-400" />
-                            <select name="disponible" id="disponible" class="block mt-1 w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white">
-                                <option value="1">Disponible</option>
-                                <option value="0">No Disponible</option>
+                            <label for="disponible"
+                                class="block text-gray-700 dark:text-gray-300 font-semibold">Disponibilidad</label>
+                            <select name="disponible" id="disponible"
+                                class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="1" {{ old('disponible') == '1' ? 'selected' : '' }}>Disponible</option>
+                                <option value="0" {{ old('disponible') == '0' ? 'selected' : '' }}>No Disponible
+                                </option>
                             </select>
-                            <x-input-error :messages="$errors->get('disponible')" class="mt-2" />
+                            @error('disponible')
+                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
-                    {{-- Categoría --}}
-                    <input type="hidden" name="id_categoria" value="{{ $categoriaSeleccionada ?? '' }}" />
-                    <x-input-error :messages="$errors->get('id_categoria')" class="mt-2" />
+                    <!-- Categoría -->
+                    <input type="hidden" name="id_categoria" value="{{ $categoriaSeleccionada ?? '' }}">
+                    @error('id_categoria')
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
 
-                    {{-- Botón --}}
+                    <!-- Botones -->
                     <div class="mt-auto flex justify-end gap-4">
-                        <a href="{{ route('menus.index') }}" 
-                        class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 text-gray-800 dark:text-gray-200">
+                        <a href="{{ route('menus.index') }}"
+                            class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary/20 hover:bg-primary/30 text-gray-800 dark:text-gray-200">
                             Cancelar
                         </a>
-                        <button type="submit" class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90">
-                            Guardar Menu
+                        <button type="submit"
+                            class="px-6 py-2 rounded-lg text-sm font-semibold bg-primary text-white hover:opacity-90">
+                            Guardar Menú
                         </button>
                     </div>
                 </form>
@@ -85,23 +119,23 @@
 
     {{-- Vista previa de imagen --}}
     <script>
-        function previewImagen(event) {
-            const input = event.target;
-            const preview = document.getElementById('preview-imagen');
-            const file = input.files[0];
+    function previewImagen(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview-imagen');
+        const file = input.files[0];
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                }
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = '#';
-                preview.classList.add('hidden');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
             }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.classList.add('hidden');
         }
+    }
     </script>
 
 </x-app-layout>
