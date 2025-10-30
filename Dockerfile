@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev \
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev nodejs npm \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 # Instalar Composer
@@ -18,19 +18,15 @@ COPY . .
 # Permisos para Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
-# Instalar dependencias PHP
+# Instalar dependencias PHP y Node
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN npm install && npm run build
 
-# Copiar el archivo .env si existe (opcional si Render usa Environment Variables)
-# COPY .env .env
-
-# Generar APP_KEY si no existe
+# Generar APP_KEY y ejecutar migraciones
 RUN php artisan key:generate --force || true
-
-# Ejecutar migraciones y seeders (sin detener el build si ya existen)
 RUN php artisan migrate --force || true
 
-# Exponer puerto 8000
+# Exponer el puerto 8000
 EXPOSE 8000
 
 # Comando para ejecutar Laravel
