@@ -18,7 +18,7 @@ RUN chmod -R 775 storage bootstrap/cache
 
 # Instalar dependencias de Laravel
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-RUN php artisan migrate --force || true
+RUN php artisan migrate --force --seed || true
 
 # Exponer el puerto 8000
 EXPOSE 8000
