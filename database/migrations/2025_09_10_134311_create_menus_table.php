@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_categoria')->constrained('categorias')->onDelete('cascade');
-            $table->string('nombre')->unique();
+            $table->string('nombre');
             $table->text('descripcion');
             $table->decimal('precio', 8, 2);
             $table->boolean('disponible');

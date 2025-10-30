@@ -16,9 +16,9 @@
 
                     {{-- Nombre --}}
                     <div class="mb-4">
-                        <label for="name" class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre</label>
+                        <label for="name" class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre <i class="text-red-500">*</i></label>
                         <input id="name" name="name" type="text" required
-                            autocomplete="name"
+                            autocomplete="name" placeholder="Ejemplo: juanperez"
                             @blur="verificarCampo('name', $event.target.value)"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                             dark:text-white focus:border-indigo-500 focus:ring-indigo-500" />
@@ -31,10 +31,10 @@
                     {{-- Email --}}
                     <div class="mb-4">
                         <label for="email" class="block text-gray-700 dark:text-gray-300 font-semibold">
-                            Correo Electrónico
+                            Correo Electrónico <i class="text-red-500">*</i>
                         </label>
                         <input id="email" name="email" type="email" required
-                            autocomplete="username"
+                            autocomplete="username" placeholder="Ejemplo: juanperez@example.com"
                             @blur="verificarCampo('email', $event.target.value)"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                             dark:text-white focus:border-indigo-500 focus:ring-indigo-500" />
@@ -46,7 +46,7 @@
 
                     {{-- Rol --}}
                     <div class="mb-4">
-                        <label for="rol" class="block text-gray-700 dark:text-gray-300 font-semibold">Rol</label>
+                        <label for="rol" class="block text-gray-700 dark:text-gray-300 font-semibold">Rol <i class="text-red-500">*</i></label>
                         <select id="rol" name="rol"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                             dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
@@ -60,7 +60,7 @@
                     {{-- Contraseña --}}
                     <div class="mb-4">
                         <label for="password"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold">Contraseña</label>
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Contraseña <i class="text-red-500">*</i></label>
                         <input id="password" name="password" type="password" required
                             x-model="password"
                             autocomplete="new-password"

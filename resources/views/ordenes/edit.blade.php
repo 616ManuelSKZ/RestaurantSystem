@@ -97,7 +97,7 @@
                 {{-- Área y Mesa --}}
                 <div class="flex flex-col md:flex-row gap-4 mb-4">
                     <div class="flex-1">
-                        <label for="id_area_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Área de mesas</label>
+                        <label for="id_area_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Área de mesas <i class="text-red-500">*</i></label>
                         <select name="id_area_mesas" id="id_area_mesas"
                             class="w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" required>
                             <option value="">-- Selecciona un área --</option>
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="flex-1">
-                        <label for="id_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Mesa disponible</label>
+                        <label for="id_mesas" class="block mb-1 text-gray-700 dark:text-gray-200">Mesa disponible <i class="text-red-500">*</i></label>
                         <select name="id_mesas" id="id_mesas"
                             class="w-full border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white dark:bg-background-dark/50 text-gray-900 dark:text-white" required>
                             <option value="{{ $orden->mesa->id }}">Mesa {{ $orden->mesa->numero }}</option>

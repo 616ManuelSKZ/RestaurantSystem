@@ -19,7 +19,7 @@
                 {{-- Tipo de factura --}}
                 <div class="mb-6">
                     <label for="tipo_factura" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-                        Tipo de Factura
+                        Tipo de Factura <i class="text-red-500">*</i>
                     </label>
                     <select name="tipo_factura" id="tipo_factura"
                         class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white dark:bg-background-dark/70 text-gray-900 dark:text-gray-100">
@@ -41,8 +41,8 @@
                     <div>
                         <label for="nombre_cliente"
                             class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">Nombre / Razón
-                            Social</label>
-                        <input type="text" name="nombre_cliente" id="nombre_cliente" value="{{ old('nombre_cliente') }}"
+                            Social <i class="text-red-500">*</i></label>
+                        <input type="text" name="nombre_cliente" id="nombre_cliente" value="{{ old('nombre_cliente') }}" placeholder="Ejemplo: Juan Pérez o Empresa XYZ"
                             class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-3 py-2 bg-white dark:bg-background-dark/70 text-gray-900 dark:text-gray-100">
                         @error('nombre_cliente')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -51,8 +51,8 @@
 
                     <div>
                         <label for="nit_cliente" class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">NIT /
-                            ID Fiscal</label>
-                        <input type="text" name="nit_cliente" id="nit_cliente" value="{{ old('nit_cliente') }}"
+                            ID Fiscal <i class="text-red-500">*</i></label>
+                        <input type="text" name="nit_cliente" id="nit_cliente" value="{{ old('nit_cliente') }}" placeholder="Ejemplo: 0614-290590-101-3"
                             class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-3 py-2 bg-white dark:bg-background-dark/70 text-gray-900 dark:text-gray-100">
                         @error('nit_cliente')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -61,9 +61,9 @@
 
                     <div>
                         <label for="direccion_cliente"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">Dirección</label>
+                            class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">Dirección <i class="text-red-500">*</i></label>
                         <input type="text" name="direccion_cliente" id="direccion_cliente"
-                            value="{{ old('direccion_cliente') }}"
+                            value="{{ old('direccion_cliente') }}" placeholder="Ejemplo: Calle 123, Ciudad, País"
                             class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-3 py-2 bg-white dark:bg-background-dark/70 text-gray-900 dark:text-gray-100">
                         @error('direccion_cliente')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -72,9 +72,9 @@
 
                     <div>
                         <label for="telefono_cliente"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">Teléfono</label>
+                            class="block text-gray-700 dark:text-gray-300 font-semibold mb-1">Teléfono <i class="text-red-500">*</i></label>
                         <input type="text" name="telefono_cliente" id="telefono_cliente"
-                            value="{{ old('telefono_cliente') }}"
+                            value="{{ old('telefono_cliente') }}" placeholder="Ejemplo: 1234-5678"
                             class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm px-3 py-2 bg-white dark:bg-background-dark/70 text-gray-900 dark:text-gray-100">
                         @error('telefono_cliente')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

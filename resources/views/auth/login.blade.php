@@ -43,18 +43,14 @@
     </head>
 
     <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
-        <!-- Contenedor principal dividido -->
-        <div class="flex flex-col md:flex-row min-h-screen">
-            <!-- Lado izquierdo: Imagen -->
-            <div class="w-full md:w-1/2 bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');">
-                <!-- Overlay opcional para mejor contraste si la imagen es clara -->
-                <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                <!-- Puedes agregar texto o elementos aquí si quieres, como un título -->
-            </div>
+        <!-- Contenedor principal con imagen de fondo -->
+        <div class="min-h-screen bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');">
+            <!-- Overlay para mejor contraste -->
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
 
-            <!-- Lado derecho: Formulario -->
-            <div class="w-full md:w-1/2 flex-1 flex items-center justify-center p-8">
-                <div class="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark shadow-xl rounded-xl p-8">
+            <!-- Formulario centrado -->
+            <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+                <div class="w-full max-w-md space-y-8 bg-background-light dark:bg-background-dark bg-opacity-100 dark:bg-opacity-100 shadow-xl rounded-xl p-8">
                     <!-- Encabezado -->
                     <div class="text-center">
                         <h1 class="text-3xl font-bold tracking-tight">Inicio de Sesión</h1>

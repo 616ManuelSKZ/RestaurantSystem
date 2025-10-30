@@ -18,7 +18,7 @@
                     <!-- Imagen -->
                     <div class="mb-6">
                         <label for="imagen" class="block text-gray-700 dark:text-gray-300 font-semibold">
-                            Subir imagen
+                            Subir imagen <i class="text-gray-400">(Opcional)</i>
                         </label>
 
                         <div class="flex flex-col items-center gap-4">
@@ -44,7 +44,7 @@
                     <!-- Nombre -->
                     <div class="mb-6">
                         <label for="nombre" class="block text-gray-700 dark:text-gray-300 font-semibold">
-                            Nombre
+                            Nombre <i class="text-red-500">*</i>
                         </label>
                         <input id="nombre" name="nombre" type="text" required autofocus autocomplete="nombre"
                             value="{{ old('nombre', $menu->nombre) }}"
@@ -58,9 +58,9 @@
                     <!-- Descripción -->
                     <div class="mb-6">
                         <label for="descripcion" class="block text-gray-700 dark:text-gray-300 font-semibold">
-                            Descripción
+                            Descripción <i class="text-red-500">*</i>
                         </label>
-                        <textarea id="descripcion" name="descripcion" required
+                        <textarea id="descripcion" name="descripcion" required rows="4" autofocus autocomplete="descripcion"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">{{ old('descripcion', $menu->descripcion) }}</textarea>
                         @error('descripcion')

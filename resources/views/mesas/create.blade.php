@@ -23,9 +23,9 @@
                     <!-- Número de Mesa -->
                     <div class="mb-6">
                         <label for="numero" class="block text-gray-700 dark:text-gray-300 font-semibold">Número de
-                            Mesa</label>
+                            Mesa <i class="text-red-500">*</i></label>
                         <input id="numero" name="numero" type="number" value="{{ old('numero') }}" required class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
-                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500" placeholder="Ingrese el número de la mesa">
                         @error('numero')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -34,10 +34,10 @@
                     <!-- Capacidad -->
                     <div class="mb-6">
                         <label for="capacidad"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold">Capacidad</label>
-                        <input id="capacidad" name="capacidad" type="number" value="{{ old('capacidad') }}" required
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Capacidad <i class="text-red-500">*</i></label>
+                        <input id="capacidad" name="capacidad" type="number" value="{{ old('capacidad') }}" required 
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
-                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
+                   dark:text-white focus:border-indigo-500 focus:ring-indigo-500" placeholder="Ingrese la capacidad de la mesa">
                         @error('capacidad')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -46,7 +46,7 @@
                     <!-- Estado -->
                     <div class="mb-6">
                         <label for="estado"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold">Estado</label>
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Estado <i class="text-red-500">*</i></label>
                         <select id="estado" name="estado" class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="disponible"

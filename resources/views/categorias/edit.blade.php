@@ -5,8 +5,8 @@
     <!-- Nombre -->
     <div class="mb-4">
         <label for="nombre" class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre de la
-            Categoría</label>
-        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $categoria->nombre) }}"
+            Categoría <i class="text-red-500">*</i></label>
+        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $categoria->nombre) }}" placeholder="Ingrese el nombre de la categoría"
             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
             required>

@@ -17,7 +17,7 @@
                     <!-- Imagen -->
                     <div class="mb-6">
                         <label for="imagen" class="block text-gray-700 dark:text-gray-300 font-semibold">
-                            Subir imagen
+                            Subir imagen <i class="text-gray-400">(Opcional)</i>
                         </label>
 
                         <div class="flex flex-col items-center gap-4">
@@ -41,9 +41,9 @@
                     <!-- Nombre -->
                     <div class="mb-6">
                         <label for="nombre"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre</label>
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Nombre <i class="text-red-500">*</i></label>
                         <input id="nombre" name="nombre" type="text" required autofocus autocomplete="nombre"
-                            value="{{ old('nombre') }}"
+                            value="{{ old('nombre') }}" placeholder="Ingrese el nombre del menú"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
                         @error('nombre')
@@ -54,8 +54,8 @@
                     <!-- Descripción -->
                     <div class="mb-6">
                         <label for="descripcion"
-                            class="block text-gray-700 dark:text-gray-300 font-semibold">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" required
+                            class="block text-gray-700 dark:text-gray-300 font-semibold">Descripción <i class="text-red-500">*</i></label>
+                        <textarea id="descripcion" name="descripcion" required autofocus autocomplete="descripcion" rows="4" placeholder="Ingrese la descripción del menú"
                             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
@@ -67,9 +67,9 @@
                         <!-- Precio -->
                         <div>
                             <label for="precio"
-                                class="block text-gray-700 dark:text-gray-300 font-semibold">Precio</label>
+                                class="block text-gray-700 dark:text-gray-300 font-semibold">Precio <i class="text-red-500">*</i></label>
                             <input id="precio" name="precio" type="number" step="0.01" required autocomplete="precio"
-                                value="{{ old('precio') }}"
+                                value="{{ old('precio') }}" placeholder="Ingrese el precio del menú"
                                 class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
                             @error('precio')
@@ -80,7 +80,7 @@
                         <!-- Disponibilidad -->
                         <div>
                             <label for="disponible"
-                                class="block text-gray-700 dark:text-gray-300 font-semibold">Disponibilidad</label>
+                                class="block text-gray-700 dark:text-gray-300 font-semibold">Disponibilidad <i class="text-red-500">*</i></label>
                             <select name="disponible" id="disponible"
                                 class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">

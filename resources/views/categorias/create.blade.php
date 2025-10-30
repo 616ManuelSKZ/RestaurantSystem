@@ -4,9 +4,9 @@
     <!-- Nombre de Categoría -->
     <div class="mb-6">
         <label for="nombre" class="block text-gray-700 dark:text-gray-300 font-semibold">
-            Nombre de Categoría
+            Nombre de Categoría <i class="text-red-500">*</i>
         </label>
-        <input id="nombre" name="nombre" type="text" required value="{{ old('nombre') }}"
+        <input id="nombre" name="nombre" type="text" required value="{{ old('nombre') }}" placeholder="Ingrese el nombre de la categoría"
             class="block mt-2 w-full rounded-xl shadow-sm border-gray-300 dark:border-gray-600 dark:bg-background-dark/70 
                    dark:text-white focus:border-indigo-500 focus:ring-indigo-500">
         @error('nombre')
