@@ -14,13 +14,23 @@ WORKDIR /var/www/html
 
 # Copiar archivos del proyecto
 COPY . .
+
+# Permisos para Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
-# Instalar dependencias de Laravel
+# Instalar dependencias PHP
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-RUN php artisan migrate --force --seed || true
 
-# Exponer el puerto 8000
+# Copiar el archivo .env si existe (opcional si Render usa Environment Variables)
+# COPY .env .env
+
+# Generar APP_KEY si no existe
+RUN php artisan key:generate --force || true
+
+# Ejecutar migraciones y seeders (sin detener el build si ya existen)
+RUN php artisan migrate --force || true
+
+# Exponer puerto 8000
 EXPOSE 8000
 
 # Comando para ejecutar Laravel
